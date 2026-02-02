@@ -13,9 +13,7 @@ import Products from "./pages/public/Products";
 // Admin pages
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProducts from "./pages/admin/Products";
-
-// Optional user pages
-// import Profile from "./pages/user/Profile";
+import AdminLogin from "./pages/admin/AdminLogin";
 
 // --------------------------
 // ProtectedRoute component
@@ -25,30 +23,44 @@ interface ProtectedRouteProps {
   adminOnly?: boolean;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = false }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  adminOnly = false,
+}) => {
   const { user, loading } = useAuth();
 
-  if (loading) return null; // or a loading spinner
+  if (loading) return null; // replace with spinner if needed
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/" replace />;
 
-  if (adminOnly && user.role !== "admin") return <Navigate to="/" replace />;
+  if (adminOnly && user.role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
 
   return <>{children}</>;
 };
 
 // --------------------------
-// Layout component for Header/Footer
+// Layout component
 // --------------------------
-const Layout: React.FC = () => (
-  <div className="flex min-h-screen flex-col font-sans">
-    <Header />
-    <main className="flex-1">
-      <Outlet />
-    </main>
-    <Footer />
-  </div>
-);
+const Layout: React.FC = () => {
+
+
+  return (
+    <div className="flex min-h-screen flex-col font-sans">
+      <Header/>
+
+      <main className="flex-1">
+        <Outlet />
+      </main>
+
+      <Footer />
+
+      {/* Login modal lives here */}
+      {/* <Login open={loginOpen} onOpenChange={setLoginOpen} /> */}
+    </div>
+  );
+};
 
 // --------------------------
 // App Component
@@ -56,21 +68,11 @@ const Layout: React.FC = () => (
 function App() {
   return (
     <Routes>
-      {/* Wrap all routes with Layout */}
       <Route element={<Layout />}>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/products" element={<Products />} />
-
-        {/* Protected User Routes */}
-        {/* <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        /> */}
 
         {/* Admin Routes */}
         <Route
@@ -81,6 +83,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/admin/products"
           element={
@@ -90,7 +93,7 @@ function App() {
           }
         />
 
-        {/* Catch-all 404 */}
+        {/* 404 */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

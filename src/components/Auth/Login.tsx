@@ -1,7 +1,9 @@
-"use client";
+'use client';
 
+import { useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import GoogleIcon from "../../assets/icons/google-icon.png";
-import FastCart from "../../assets/icons/fast-cart.png"; // 👈 your cart image
+import FastCart from "../../assets/icons/fast-cart.png";
 
 import {
   Dialog,
@@ -10,6 +12,7 @@ import {
   DialogTitle,
 } from "../../components/ui/dialog";
 import { Button } from "../../components/ui/button";
+import { useAuth } from "../../context/AuthContext";
 
 interface LoginProps {
   open: boolean;
@@ -17,9 +20,24 @@ interface LoginProps {
 }
 
 const Login = ({ open, onOpenChange }: LoginProps) => {
+  const { login } = useAuth();
+  const [searchParams] = useSearchParams(); // destructure tuple correctly
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = searchParams.get("token"); // now works
+    if (token) {
+      // Wrap async call inside an IIFE since useEffect cannot be async
+      (async () => {
+        await login(token); // login is async
+        onOpenChange(false); // close modal
+        navigate("/"); // redirect after login
+      })();
+    }
+  }, [searchParams, login, navigate, onOpenChange]);
+
   const handleGoogleLogin = () => {
-    console.log("Google auth clicked");
-    // TODO: integrate Google auth
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
   };
 
   return (
@@ -43,7 +61,7 @@ const Login = ({ open, onOpenChange }: LoginProps) => {
           <Button
             onClick={handleGoogleLogin}
             variant="outline"
-            className="w-full flex items-center justify-center gap-3 py-6 rounded-xl text-sm border border-black"
+            className="w-full flex items-center justify-center gap-3 py-6 rounded-xl text-sm border border-black hover:bg-zinc-50 transition"
           >
             <img
               src={GoogleIcon}
@@ -54,7 +72,7 @@ const Login = ({ open, onOpenChange }: LoginProps) => {
           </Button>
 
           <p className="mt-4 text-center text-sm text-muted-foreground">
-            We’ll never post without your permission.
+            By continuing, you agree to our Terms & Privacy Policy.
           </p>
         </div>
       </DialogContent>
