@@ -1,7 +1,7 @@
 'use client';
 
 import  { useState } from 'react';
-import { Search, MapPin, Heart, ShoppingCart, User,  Menu, X, LogOut } from 'lucide-react';
+import { Search, Heart, ShoppingCart, User,  Menu, X, LogOut } from 'lucide-react';
 import { Input } from '../ui/input';
 import {
   Select,
@@ -59,13 +59,6 @@ export default function Header() {
       {/* Top Bar */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between text-sm">
-          <div className="flex items-center gap-6">
-            <span className="text-gray-600">Deliver to</span>
-            <div className="flex items-center gap-2 text-gray-700 font-medium">
-              <MapPin className="w-4 h-4" />
-              <span>Update Location</span>
-            </div>
-          </div>
           <div className="flex items-center gap-4">
             <Select defaultValue="ae">
               <SelectTrigger className="w-12 h-8 p-1 border-0 bg-transparent">
