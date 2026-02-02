@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
 
-// ✅ Local image imports
 import iphoneImg from '../../../assets/iphone17.jpg';
 import iWatchImg from '../../../assets/iwatch1.jpg';
 
@@ -14,19 +13,21 @@ const Hero = () => {
     {
       id: 1,
       title: 'iPhone 16 Pro Max',
-      subtitle: 'From ₦ 2,700,000',
-      description: 'All the Apple. Supersized. Display Beyond Perspective',
+      subtitle: 'From ₦2,700,000',
+      description: 'All the Apple. Supersized. Display beyond perspective.',
       cta: 'Shop Now',
-      bgColor: 'from-black via-zinc-800/40 to-black',
+      bgColor:
+        'from-neutral-950 via-zinc-900 to-neutral-800', // premium dark
       image: iphoneImg,
     },
     {
       id: 2,
-      title: 'SALE 50%',
-      subtitle: 'Limited Time Offer',
-      description: 'Get amazing discounts on selected items',
+      title: 'Apple Watch Series',
+      subtitle: 'Up to 50% Off',
+      description: 'Limited-time deals on premium Apple accessories.',
       cta: 'Shop Now',
-      bgColor: 'from-orange-700 via-orange-500 to-orange-600',
+      bgColor:
+        'from-indigo-900 via-purple-900 to-fuchsia-800', // techy & vibrant
       image: iWatchImg,
     },
   ];
@@ -45,8 +46,8 @@ const Hero = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-8">
-      <div className="relative overflow-hidden rounded-xl">
+    <section className="max-w-7xl mx-auto px-3 sm:px-4 py-6">
+      <div className="relative overflow-hidden rounded-2xl">
         {/* ================= Carousel ================= */}
         <div
           className="flex transition-transform duration-500 ease-out"
@@ -55,39 +56,41 @@ const Hero = () => {
           {slides.map((slide) => (
             <div
               key={slide.id}
-              className={`w-full flex-shrink-0 h-96 bg-gradient-to-r ${slide.bgColor} rounded-xl flex items-center justify-between p-8 md:p-12`}
+              className={`w-full flex-shrink-0 bg-gradient-to-br ${slide.bgColor}`}
             >
-              {/* LEFT CONTENT */}
-              <div className="flex-1 z-10">
-                <p className="text-white text-sm font-medium mb-2">
-                  New Arrival
-                </p>
+              <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10 px-5 py-8 sm:px-8 md:p-12">
+                {/* LEFT CONTENT */}
+                <div className="flex-1 text-center md:text-left">
+                  <p className="text-white/70 text-xs sm:text-sm mb-1">
+                    New Arrival
+                  </p>
 
-                <h2 className="text-3xl md:text-6xl font-normal text-white mb-2">
-                  {slide.title}
-                </h2>
+                  <h2 className="text-xl sm:text-2xl md:text-5xl font-medium text-white mb-2">
+                    {slide.title}
+                  </h2>
 
-                <p className="text-lg md:text-2xl text-white/90 mb-4">
-                  {slide.subtitle}
-                </p>
+                  <p className="text-sm sm:text-base md:text-xl text-white/90 mb-3">
+                    {slide.subtitle}
+                  </p>
 
-                <p className="text-white/80 text-sm md:text-base mb-6 max-w-md">
-                  {slide.description}
-                </p>
+                  <p className="text-xs sm:text-sm md:text-base text-white/75 mb-5 max-w-md mx-auto md:mx-0">
+                    {slide.description}
+                  </p>
 
-                <button className="flex items-center bg-white text-black px-6 md:px-8 py-2 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
-                  {slide.cta}
-                  <ShoppingCart className="w-8 h-8 pl-3"/>
-                </button>
-              </div>
+                  <button className="inline-flex items-center justify-center gap-2 bg-white text-black px-5 py-2.5 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-100 transition">
+                    {slide.cta}
+                    <ShoppingCart className="w-5 h-5" />
+                  </button>
+                </div>
 
-              {/* RIGHT IMAGE */}
-              <div className="hidden md:flex flex-1 items-center justify-end">
-                <img
-                  src={slide.image}
-                  alt={slide.title}
-                  className="h-100 object-contain drop-shadow-xl"
-                />
+                {/* RIGHT IMAGE (VISIBLE ON MOBILE) */}
+                <div className="flex-1 flex justify-center md:justify-end">
+                  <img
+                    src={slide.image}
+                    alt={slide.title}
+                    className="w-40 sm:w-48 md:w-[420px] object-contain drop-shadow-2xl"
+                  />
+                </div>
               </div>
             </div>
           ))}
@@ -96,20 +99,20 @@ const Hero = () => {
         {/* ================= Controls ================= */}
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white p-2 rounded-full transition"
+          className="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white p-2 rounded-full"
         >
-          <ChevronLeft className="w-6 h-6 text-gray-900" />
+          <ChevronLeft className="w-5 h-5 text-gray-900" />
         </button>
 
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white p-2 rounded-full transition"
+          className="absolute right-3 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white p-2 rounded-full"
         >
-          <ChevronRight className="w-6 h-6 text-gray-900" />
+          <ChevronRight className="w-5 h-5 text-gray-900" />
         </button>
 
         {/* ================= Dots ================= */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-2">
           {slides.map((_, index) => (
             <button
               key={index}
@@ -117,7 +120,7 @@ const Hero = () => {
               className={`h-2 rounded-full transition-all ${
                 index === currentSlide
                   ? 'bg-white w-6'
-                  : 'bg-white/50 w-2'
+                  : 'bg-white/40 w-2'
               }`}
             />
           ))}
