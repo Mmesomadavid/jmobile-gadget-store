@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect} from 'react';
+import type { ReactNode } from 'react';
 
 interface User {
   _id: string;
   name: string;
   email: string;
-  role: "user" | "admin";
+  role: 'user' | 'admin';
   avatar?: string;
   provider?: string;
 }
@@ -12,71 +13,71 @@ interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (token: string) => void;
+  login: (token: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  token: null,
-  login: () => {},
-  logout: () => {},
-  loading: true,
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-  // --------------------------
-  // Login (set token and fetch user)
-  // --------------------------
   const login = async (jwtToken: string) => {
-    localStorage.setItem("authToken", jwtToken);
-    setToken(jwtToken);
-
     try {
+      localStorage.setItem('authToken', jwtToken);
+      setToken(jwtToken);
+
       const res = await fetch(`${API_URL}/auth/me`, {
+        method: 'GET',
         headers: {
           Authorization: `Bearer ${jwtToken}`,
+          'Content-Type': 'application/json',
         },
       });
 
-      if (!res.ok) throw new Error("Failed to fetch user");
+      if (!res.ok) throw new Error('Failed to fetch user');
 
       const data = await res.json();
       setUser(data.user);
     } catch (err) {
-      console.error(err);
+      console.error('Login error:', err);
       logout();
+      throw err;
     }
   };
 
-  // --------------------------
-  // Logout
-  // --------------------------
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem("authToken");
+    localStorage.removeItem('authToken');
   };
 
-  // --------------------------
-  // Load user on app start
-  // --------------------------
+  // Initialize from localStorage on mount
   useEffect(() => {
-    const savedToken = localStorage.getItem("authToken");
-    if (savedToken) login(savedToken);
-    else setLoading(false);
+    const savedToken = localStorage.getItem('authToken');
+    if (savedToken) {
+      login(savedToken).catch(() => {
+        setLoading(false);
+      });
+    } else {
+      setLoading(false);
+    }
   }, []);
 
-  // Once user is loaded, set loading to false
+  // Stop loading once user or token is set
   useEffect(() => {
-    if (user || !token) setLoading(false);
+    if (user || !token) {
+      setLoading(false);
+    }
   }, [user, token]);
 
   return (
@@ -86,7 +87,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
-// --------------------------
-// Hook to use auth context
-// --------------------------
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
