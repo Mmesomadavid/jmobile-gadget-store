@@ -12,6 +12,7 @@ import {
 } from '../ui/select';
 import { useAuth } from '../../context/AuthContext';
 import Login from '../Auth/Login';
+import Logo from '../Logo';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -26,7 +27,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200">
+    <header className="sticky top-0 z-50 w-full bg-white border-none border-gray-200">
       {/* Top Bar */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-2 sm:py-3 flex items-center justify-between text-xs sm:text-sm">
@@ -60,7 +61,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
         {/* Logo */}
         <div className="flex-shrink-0">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">jj.mobilewrld</h1>
+          <Logo/>
         </div>
 
         {/* Desktop Search Bar */}
@@ -71,7 +72,7 @@ export default function Header() {
               placeholder="Search for any product or brand"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="border-0 focus-visible:ring-0 flex-1 px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base"
+              className="border-0 h-10 focus-visible:ring-0 flex-1 px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base"
             />
             <button className="px-3 sm:px-4 py-1.5 sm:py-2 text-gray-400 hover:text-gray-600 transition">
               <Search className="w-4 h-4 sm:w-5 sm:h-5" />
