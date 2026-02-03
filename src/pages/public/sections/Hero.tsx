@@ -12,7 +12,7 @@ const Hero = () => {
   const slides = [
     {
       id: 1,
-      title: 'iPhone 16 Pro Max',
+      title: 'iPhone 17 Pro Max',
       subtitle: 'From ₦2,700,000',
       description: 'All the Apple. Supersized. Display beyond perspective.',
       cta: 'Shop Now',
