@@ -12,18 +12,21 @@ const Logo = ({ variant = "primary" }: LogoProps) => {
       logoSrc = PrimaryLogo;
       break;
     case "secondary":
-      // Add secondary logo here when available
-      logoSrc = undefined; 
+      logoSrc = undefined;
       break;
     default:
       logoSrc = PrimaryLogo;
   }
 
-  if (!logoSrc) return null; // avoids rendering empty img
+  if (!logoSrc) return null;
 
   return (
-    <div className="flex items-center justify-center">
-      <img src={logoSrc} alt="Logo" className="h-32 w-auto" />
+    <div className="flex items-center justify-center min-h-[56px]">
+      <img
+        src={logoSrc}
+        alt="Logo"
+        className="h-16 sm:h-20 md:h-24 w-auto object-contain"
+      />
     </div>
   );
 };
