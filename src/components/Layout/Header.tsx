@@ -12,22 +12,32 @@ import {
 } from '../ui/select';
 import { useAuth } from '../../context/AuthContext';
 import Login from '../Auth/Login';
-import Logo from '../Logo';
+
+const categories = [
+  { value: 'all', label: 'All' },
+  { value: 'phones', label: 'Phones' },
+  { value: 'accessories', label: 'Accessories' },
+  { value: 'chargers', label: 'Chargers' },
+  { value: 'audio', label: 'Audio' },
+  { value: 'wearables', label: 'Wearables' },
+  { value: 'gaming', label: 'Gaming' },
+];
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchCategory, setSearchCategory] = useState('all');
   const [loginOpen, setLoginOpen] = useState(false);
   const [wishlistHover, setWishlistHover] = useState(false);
   const { user } = useAuth();
 
   const cartItems = [
-    { id: 1, name: 'iPhone 14 Pro Max Case', price: '₦5,999', image: '📱' },
-    { id: 2, name: 'USB-C Fast Charger 65W', price: '₦8,500', image: '🔌' },
+    { id: 1, name: 'iPhone 14 Pro Max Case', price: '?5,999', image: '??' },
+    { id: 2, name: 'USB-C Fast Charger 65W', price: '?8,500', image: '??' },
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-none border-gray-200">
+    <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-gray-200/70">
       {/* Top Bar */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-2 sm:py-3 flex items-center justify-between text-xs sm:text-sm">
@@ -38,8 +48,8 @@ export default function Header() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ngn">🇳🇬 NGN</SelectItem>
-                <SelectItem value="usd">💵 USD</SelectItem>
+                <SelectItem value="ngn">???? NGN</SelectItem>
+                <SelectItem value="usd">?? USD</SelectItem>
               </SelectContent>
             </Select>
 
@@ -58,23 +68,33 @@ export default function Header() {
       </div>
 
       {/* Main Header */}
-      <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
-        {/* Logo */}
-        <div className="flex-shrink-0">
-          <Logo/>
-        </div>
-
+      <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-end md:justify-between gap-2 sm:gap-4">
         {/* Desktop Search Bar */}
-        <div className="flex-1 hidden md:flex max-w-2xl">
-          <div className="w-full flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white">
+        <div className="flex-1 hidden md:flex max-w-3xl">
+          <div className="w-full flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm focus-within:ring-2 focus-within:ring-blue-100/70 transition">
+            <Select value={searchCategory} onValueChange={setSearchCategory}>
+              <SelectTrigger className="h-10 sm:h-11 w-[120px] sm:w-[140px] border-0 border-r border-gray-200 bg-gray-50 text-xs sm:text-sm font-medium rounded-none">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.value} value={category.value}>
+                    {category.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Input
               type="text"
               placeholder="Search for any product or brand"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="border-0 h-10 focus-visible:ring-0 flex-1 px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base"
+              className="border-0 h-10 sm:h-11 focus-visible:ring-0 flex-1 px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base bg-transparent"
             />
-            <button className="px-3 sm:px-4 py-1.5 sm:py-2 text-gray-400 hover:text-gray-600 transition">
+            <button
+              className="px-3 sm:px-4 py-1.5 sm:py-2 text-gray-500 hover:text-blue-600 transition-colors"
+              aria-label="Search"
+            >
               <Search className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
@@ -127,13 +147,32 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden mt-2 space-y-2 px-4">
           {/* Mobile Search */}
-          <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white mb-2">
+          <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm focus-within:ring-2 focus-within:ring-blue-100/70 transition mb-2">
+            <Select value={searchCategory} onValueChange={setSearchCategory}>
+              <SelectTrigger className="h-9 w-[110px] border-0 border-r border-gray-200 bg-gray-50 text-xs font-medium rounded-none">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.value} value={category.value}>
+                    {category.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Input
               type="text"
               placeholder="Search..."
-              className="border-0 focus-visible:ring-0 flex-1 px-3 py-2 text-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border-0 h-9 focus-visible:ring-0 flex-1 px-3 py-2 text-sm bg-transparent"
             />
-            <Search className="w-4 h-4 text-gray-400 mr-2" />
+            <button
+              className="px-2 text-gray-400 hover:text-blue-600 transition-colors"
+              aria-label="Search"
+            >
+              <Search className="w-4 h-4" />
+            </button>
           </div>
 
           {/* Categories Label */}
