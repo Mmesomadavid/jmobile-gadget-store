@@ -76,7 +76,7 @@ export default function Header() {
             </Select>
 
             {user ? (
-              <span className="text-gray-600 font-medium">{user.name}</span>
+              <span className="text-gray-600 font-medium">Welcome {user.name}, Happy Shopping!</span>
             ) : (
               <button
                 onClick={() => setLoginOpen(true)}
